@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { User } from '@/utils/types';
 import Link from 'next/link';
 
