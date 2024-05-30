@@ -1,10 +1,9 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import userModel from '../models/userModel.ts'
 import { User } from '@/utils/types';
 
 // CRUD
 
-// mostrar todos los usuarios: READ
+// mostrar todos los usuarios
 export const getAllUsers = async () => {
     try {
         const users = await userModel.findAll();
@@ -35,17 +34,7 @@ export const createUser = async (userData: any) => {
     }
 };
 
-// editar un usuario
-/* export const updateUser = async (id: number, userData: any) => {
-    try {
-        await userModel.update(userData, {
-            where: { id }
-        });
-        return { message: "Usuario editado correctamente" };
-    } catch (error: any) {
-        throw new Error(error.message);
-    }
-}; */
+// editar usuario
 export const updateUser = async (id: number, data: Partial<User>) => {
     try {
       const [affectedCount, affectedRows] = await userModel.update(data, {
