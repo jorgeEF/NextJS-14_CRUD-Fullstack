@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { NextApiRequest } from 'next'
-import { getAllUsers, createUser, deleteUser } from '../../../controllers/userController';
+import { getAllUsers, createUser } from '../../../controllers/userController';
 
 export async function GET(req: NextRequest) {
     try {
