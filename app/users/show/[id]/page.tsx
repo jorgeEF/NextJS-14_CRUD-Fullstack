@@ -14,34 +14,42 @@ async function loadUser(id: string): Promise<User> {
 export default function ShowUserPage() {
   const [user, setUser] = useState<User>();
   const { id } = useParams();
+  let userId: string = '';
+  if (Array.isArray(id)) {
+    userId = id.join('');
+  } else {
+    userId = id;
+  }
 
   useEffect(() => {
     async function fetchUser() {
-      const userData = await loadUser(id[0]);
+      const userData = await loadUser(userId);
       setUser(userData);
     }
     fetchUser();
-  }, [id]);  
+  }, [id]);
 
   return (
-    <div className="container mx-auto px-4 min-h-screen flex flex-col items-center justify-center gap-4">      
+    <div className="container mx-auto px-4 min-h-screen flex flex-col items-center justify-center gap-4">
       {user ? (
-        <div>
-          <p>User Id: <i>{user.id}</i></p>
-          <p>Usuario: <i>{user.username}</i></p>
-          <p>Nombre: {user.name} </p>
-          <p>Apellido: {user.lastname} </p>
-          <p>Email: {user.email}</p>
-          <p>Password: {user.password}</p>
+        <div className="card w-96 shadow-xl bg-gray-50 text-black rounded-lg p-5">
+          <div className="card-body">
+            <p className="text-left">User Id: <i>{user.id}</i></p>
+            <p className="text-left">Usuario: <i>{user.username}</i></p>
+            <p className="text-left">Nombre: {user.name} </p>
+            <p className="text-left">Apellido: {user.lastname} </p>
+            <p className="text-left">Email: {user.email}</p>
+            <p className="text-left">Password: {user.password}</p>
 
-          <div className='flex gap-4 justify-center'>
-            <Link href={`/users/edit/${user.id}`}>Editar</Link>
-            <Link href="/users">Volver</Link>
+            <div className="flex justify-center">
+              <Link href={`/users/edit/${user.id}`}><button type="submit" className="bg-yellow-500 hover:bg-yellow-300 text-black rounded p-1 mr-2 mt-2">Editar Usuario</button></Link>
+              <Link href="/users"><button type="button" className="bg-gray-500 hover:bg-gray-400 text-black rounded p-1 mt-2">Volver</button></Link>
+            </div>
           </div>
-        </div>) : (
+        </div>
+      ) : (
         <p>Loading...</p>
       )}
-
     </div>
   );
 }
