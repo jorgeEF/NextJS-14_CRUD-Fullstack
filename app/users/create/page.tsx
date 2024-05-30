@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from 'react';
-import axios from 'axios';
 import { User } from '@/utils/types';
 import { useRouter } from 'next/navigation';
 
@@ -21,12 +20,21 @@ export default function CreateUserPage() {
       ...user,
       [event.target.name]: event.target.value,
     });
-  };
+  };  
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await axios.post(`/api/users/`, user);
+      const res = await fetch(`/api/users/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+      });
+      if (!res.ok) {
+        throw new Error('Error al crear el usuario');
+      }
       setSuccessMessage('Usuario creado correctamente');
       setTimeout(() => {
         router.push('/users');

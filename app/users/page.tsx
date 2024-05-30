@@ -1,19 +1,17 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { User } from '@/utils/types';
 import { UserTable } from '@/components/UserTable';
 import Link from 'next/link';
 
-
-
 async function loadUser(): Promise<User[]> {
-  const { data } = await axios.get('/api/users');
+  const res = await fetch('/api/users');
+  const data = await res.json();
   return data;
 }
 
-export default function UsersPage() {
+export default function UsersPage() {  
   const [users, setUsers] = useState<User[]>([]);
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -24,12 +22,17 @@ export default function UsersPage() {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, []);  
 
   const handleDelete = async (id: number) => {
-    if (typeof window!== 'undefined' && window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+    if (typeof window !== 'undefined' && window.confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
       try {
-        await axios.delete(`/api/users/${id}`);
+        const res = await fetch(`/api/users/${id}`, {
+          method: 'DELETE'
+        });
+        if (!res.ok) {
+          throw new Error('Error al eliminar el usuario');
+        }
         setSuccessMessage('Usuario eliminado correctamente');
         fetchUsers();
         setTimeout(() => {

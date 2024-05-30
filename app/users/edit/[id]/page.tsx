@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { User } from '@/utils/types';
 import { useParams, useRouter } from 'next/navigation';
 
-async function loadUser(id: string): Promise<User> {
-  const { data } = await axios.get(`/api/users/${id}`);
+async function loadUser(id: string): Promise<User> {  
+  const res = await fetch(`/api/users/${id}`);
+  const data = await res.json();
   return data;
 }
 
@@ -38,13 +38,23 @@ export default function ShowUserPage() {
         [event.target.name]: event.target.value,
       });
     }
-  };
+  };  
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (user) {
       try {
-        await axios.put(`/api/users/${user.id}`, user);
+        const res = await fetch(`/api/users/${user.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(user)
+        });
+        if (!res.ok) {
+          throw new Error('Error al actualizar el usuario');
+        }
+        const data = await res.json();
         setSuccessMessage('Usuario actualizado correctamente');
         setTimeout(() => {
           router.push('/users');

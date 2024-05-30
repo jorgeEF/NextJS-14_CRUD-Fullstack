@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState, use } from 'react';
-import axios from 'axios';
 import { User } from '@/utils/types';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
 async function loadUser(id: string): Promise<User> {
-  const { data } = await axios.get(`/api/users/${id}`);
+  const res = await fetch(`/api/users/${id}`);
+  const data = await res.json();
   return data;
 }
 
